@@ -17,7 +17,7 @@ namespace TietokantaTesti
             cnn = new MySqlConnection(connetionString);
 
             Tiedot array = new Tiedot();
-            for (int i = 1; i < 4; i++) {
+            for (int i = 1; i < 3; i++) {
                 string[] test = array.data(i);
                 Kysely valinta = new Kysely(test);
                 valinta.valitse();
@@ -62,7 +62,6 @@ namespace TietokantaTesti
         }
         public class Kysely
         {
-            //Testi class ei vielä täysin toiminnassa
             public string[] data;
 
             public Kysely(string[] a)
@@ -74,31 +73,58 @@ namespace TietokantaTesti
             {
                 for (int i = 0; i < 3; i++)
                 {
-                    Console.WriteLine(data[i]);
+                    Console.WriteLine((i + 1) + ": " + data[i]);
                 }
                 Console.WriteLine("valitse numero 1-3");
                 int valinta = Convert.ToInt32(Console.ReadLine());
-                if (data.Length < 5)
-                {
 
-                } else {
-                    switch (valinta)
-                    {
-                        case 1:
-                            //sql haulla vaihtoehdot
+                switch (valinta)
+                {
+                    case 1:
+                        //sql haulla vaihtoehdot näkyviin
+                        if (data[0] == "Pelit")
+                        {
                             Console.WriteLine("Minkä pelin tiedot haluat nähdä");
                             string hakusana = Console.ReadLine();
+                        }
+                        else
+                        {
+                            Console.WriteLine("test");
+                            Console.ReadLine();
                             //sql koodi
-                            break;
-                        case 2:
+                        }
+                        break;
+                    case 2:
+                        //sql haulla vaihtoehdot näkyviin
+                        if (data[0] == "Pelit")
+                        {
+                            Console.WriteLine("Minkä pelistudion tiedot haluat nähdä");
+                            string hakusana = Console.ReadLine();
+                        }
+                        else
+                        {
+                            Console.WriteLine("test");
+                            Console.ReadLine();
                             //sql koodi
-                            break;
-                        case 3:
+                        }
+                        break;
+                    case 3:
+                        //sql haulla vaihtoehdot näkyviin
+                        if (data[0] == "Pelit")
+                        {
+                            Console.WriteLine("Kenen pelaajan tiedot haluat nähdä");
+                            string hakusana = Console.ReadLine();
+                        }
+                        else
+                        {
+                            Console.WriteLine("test");
+                            Console.ReadLine();
                             //sql koodi
-                            break;
-                        default:
-                            break;
-                    }
+                        }
+                        break;
+                    default:
+                        break;
+
                 }
             }
         }
@@ -111,9 +137,15 @@ namespace TietokantaTesti
             };
 
             string[] peli = {
+                "Globaali käytetty peliaika per peli",
+                "Käytetty raha per peli",
+                "Pelin sisäisen tiettyjen tapahtumien määrä"
             };
 
             string[] pelistudiot = {
+                "Hae kaikki tietyn pelistudion julkaistut pelit",
+                "Eniten pelaajia omaava pelistudio",
+                "Eniten rahaa tekevä studio"
             };
             public string[] data(int numero)
             {
