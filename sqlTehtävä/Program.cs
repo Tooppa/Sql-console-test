@@ -16,6 +16,12 @@ namespace TietokantaTesti
             connetionString = "server=localhost;database=Pelitietokanta;uid=root;pwd=moi;";
             cnn = new MySqlConnection(connetionString);
 
+            Tiedot array = new Tiedot();
+            for (int i = 1; i < 4; i++) {
+                string[] test = array.data(i);
+                Kysely valinta = new Kysely(test);
+                valinta.valitse();
+            }
             /*
             // Tietokantayhteyden luominen
             string connetionString = null;
@@ -57,7 +63,7 @@ namespace TietokantaTesti
         public class Kysely
         {
             //Testi class ei vielä täysin toiminnassa
-            string[] data;
+            public string[] data;
 
             public Kysely(string[] a)
             {
@@ -72,30 +78,39 @@ namespace TietokantaTesti
                 }
                 Console.WriteLine("valitse numero 1-3");
                 int valinta = Convert.ToInt32(Console.ReadLine());
-                Console.WriteLine("hakusana");
-                string hakusana = Console.ReadLine();
-                switch (valinta)
+                if (data.Length < 5)
                 {
-                    case 1:
-                       //sql koodi plus hakusana
-                       break;
-                    case 2:
-                        //sql koodi plus hakusana
-                        break;
-                    case 3:
-                        //sql koodi plus hakusana
-                        break;
-                    default:
-                        break;
+
+                } else {
+                    switch (valinta)
+                    {
+                        case 1:
+                            //sql haulla vaihtoehdot
+                            Console.WriteLine("Minkä pelin tiedot haluat nähdä");
+                            string hakusana = Console.ReadLine();
+                            //sql koodi
+                            break;
+                        case 2:
+                            //sql koodi
+                            break;
+                        case 3:
+                            //sql koodi
+                            break;
+                        default:
+                            break;
+                    }
                 }
             }
         }
         public class Tiedot
         {
-            string[] aloitus = { 
+            string[] aloitus = {
+                "Pelit",
+                "Pelistudiot",
+                "Pelaajat"
             };
 
-            string[] peli = { 
+            string[] peli = {
             };
 
             string[] pelistudiot = {
@@ -114,6 +129,7 @@ namespace TietokantaTesti
                         return (null);
                 }
             }
+
         }
     }
 }
