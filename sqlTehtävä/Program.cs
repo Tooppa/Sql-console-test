@@ -11,6 +11,12 @@ namespace TietokantaTesti
     {
         static void Main(string[] args)
         {
+            string connetionString = null;
+            MySqlConnection cnn;
+            connetionString = "server=localhost;database=Pelitietokanta;uid=root;pwd=moi;";
+            cnn = new MySqlConnection(connetionString);
+
+            /*
             // Tietokantayhteyden luominen
             string connetionString = null;
             MySqlConnection cnn;
@@ -46,6 +52,68 @@ namespace TietokantaTesti
                 Console.WriteLine(ex + "Can not open connection ! ");
             }
             Console.ReadLine();
+            */
+        }
+        public class Kysely
+        {
+            //Testi class ei vielä täysin toiminnassa
+            string[] data;
+
+            public Kysely(string[] a)
+            {
+                data = a;
+            }
+
+            public void valitse()
+            {
+                for (int i = 0; i < 3; i++)
+                {
+                    Console.WriteLine(data[i]);
+                }
+                Console.WriteLine("valitse numero 1-3");
+                int valinta = Convert.ToInt32(Console.ReadLine());
+                Console.WriteLine("hakusana");
+                string hakusana = Console.ReadLine();
+                switch (valinta)
+                {
+                    case 1:
+                       //sql koodi plus hakusana
+                       break;
+                    case 2:
+                        //sql koodi plus hakusana
+                        break;
+                    case 3:
+                        //sql koodi plus hakusana
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+        public class Tiedot
+        {
+            string[] aloitus = { 
+            };
+
+            string[] peli = { 
+            };
+
+            string[] pelistudiot = {
+            };
+            public string[] data(int numero)
+            {
+                switch (numero)
+                {
+                    case 1:
+                        return (aloitus);
+                    case 2:
+                        return (peli);
+                    case 3:
+                        return (pelistudiot);
+                    default:
+                        return (null);
+                }
+            }
         }
     }
 }
