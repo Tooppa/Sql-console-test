@@ -100,11 +100,12 @@ namespace TietokantaTesti
                         {
                             string nimi = reader.GetString(reader.GetOrdinal("nimi"));
                             Console.WriteLine(nimi);
-
                         }
                     }
                     Console.WriteLine("\nKirjoita yhden pelin nimi");
                     string hakusana = Console.ReadLine();
+                    cnn.Close();
+                    cnn.Open();
 
                     cmd = new MySqlCommand($"{ data[dataPaikka] }{ hakusana }\";", cnn);
                 }
@@ -205,9 +206,11 @@ namespace TietokantaTesti
                 "select Peli.nimi, sum(datediff(Pelisessio.loppuaika, Pelisessio.alkuaika)) as " +
                 "GlobaaliPeliaika from Pelisessio, Peli where Peli.id = Pelisessio.peli_ID and Peli.nimi = \"",
 
-                "select * from Pelaaja",
+                "select Peli.nimi, sum(datediff(Pelisessio.loppuaika, Pelisessio.alkuaika)) as " +
+                "GlobaaliPeliaika from Pelisessio, Peli where Peli.id = Pelisessio.peli_ID and Peli.nimi = \"",
 
-                "select * from Pelaaja"
+                "select Peli.nimi, sum(datediff(Pelisessio.loppuaika, Pelisessio.alkuaika)) as " +
+                "GlobaaliPeliaika from Pelisessio, Peli where Peli.id = Pelisessio.peli_ID and Peli.nimi = \""
             };
 
             string[] pelistudiot = {
