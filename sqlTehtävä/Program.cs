@@ -9,166 +9,184 @@ namespace TietokantaTesti
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main()
         {
-            Tiedot array = new Tiedot();
             Kysely valinta = new Kysely();
-            for (int i = 1; i < 3; i++) {
-                string[] test = array.data(i);
-                valinta.Valitse(test);
-            }
+            valinta.Valitse();
         }
         public class Kysely
         {
-            public string valinta;
+            private MySqlConnection cnn;
+            private string connetionString;
+            private string ekaValinta;
+            private string tokaValinta;
+            private Tiedot array;
             public Kysely()
             {
-                valinta = "4";
+                connetionString = "server=localhost;database=Pelitietokanta;uid=root;pwd=moi;";
+                ekaValinta = null;
+                tokaValinta = null;
+                array = new Tiedot();
             }
-            public void Valitse(string[] data)
+            public void Valitse()
             {
+                string[] data = array.data(1);
                 for (int i = 0; i < 3; i++)
                 {
                     Console.WriteLine((i + 1) + ": " + data[i]);
                 }
                 Console.WriteLine("valitse numero 1-3");
-                string numero;
-                if (valinta == "4")
+                ekaValinta = Console.ReadLine();
+                data = array.data(Convert.ToInt32(ekaValinta) + 1);
+                for (int i = 0; i < 3; i++)
                 {
-                    numero = Console.ReadLine();
-                    valinta = numero;
+                    Console.WriteLine((i + 1) + ": " + data[i]);
                 }
-                else
-                {
-                    numero = Console.ReadLine();
-                }
-                
-
-                switch (valinta)
+                tokaValinta = Console.ReadLine();
+                data = array.data(Convert.ToInt32(tokaValinta) + 1);
+                switch (ekaValinta)
                 {
                     case "1":
                         string[] peli = {
+                            ekaValinta,
+                            tokaValinta,
                             "select * from Peli",
-                            "Kirjoita yhden pelin nimi",
-                            "peli",
-                            valinta,
-                            numero,
-                        };
-                        Sql(peli, data);
+                            "Kirjoita yhden pelin nimi"
+                            };
+                        FinalPrint(peli, data);
                         break;
                     case "2":
                         string[] pelistudio = {
-                            "select * from Pelistudio",
-                            "Kirjoita yhden pelistudion nimi",
-                            "pelistudio",
-                            valinta,
-                            numero,
-                        };
-                        Sql(pelistudio, data);
+                            ekaValinta,
+                            tokaValinta
+                            };
+                        FinalPrint(pelistudio, data);
                         break;
                     case "3":
                         string[] pelaaja = {
-                            "select * from Pelaaja",
-                            "Kirjoita yhden pelaajan nimi",
-                            "pelaaja",
-                            valinta,
-                            numero,
-                        };
-                        Sql(pelaaja, data);
+                            ekaValinta,
+                            tokaValinta
+                            };
+                        FinalPrint(pelaaja, data);
                         break;
                     default:
                         break;
-
-
                 }
             }
-            public void Sql(string[] b, string[] data)
+            public void FinalPrint(string[] valintaData, string[] data)
             {
-                //b sirtää dataa functioiden välillä
-                //b[0]vaihtoehdot mistä valita pelejä
-                //b[1]vaihtoehtoiset tekstit vastauksen pyytämiseen
-                //b[3]pää vaihtoehdon nimi peli, pelistudio, pelaaja
-                //b[3]pää vaihtoehdon numero peli, pelistudio, pelaaja
-                //b[4]toisen valinnan numero
-                string connetionString = null;
-                MySqlConnection cnn;
-                connetionString = "server=localhost;database=Pelitietokanta;uid=root;pwd=moi;";
+                /*
+                 *valintaData sisältö
+                 *
+                 *0ekavalinta
+                 *1tokavalinta
+                 *2sql
+                 *3pyynto
+                 *
+                 *data sisältö
+                 *
+                 *valittu pää alue
+                 *jossa kolme käskyä
+                 *ja vastaava sql koodi
+                */
+                int dataPaikka = (Convert.ToInt32(valintaData[1]) + 2);
                 cnn = new MySqlConnection(connetionString);
-                cnn.Open();
-                if (data[0] != "Pelit")
+                MySqlDataReader reader;
+                MySqlCommand cmd;
+                if (valintaData[0] == "1")//pyörii kun eka valinta oli pelit
                 {
-                    MySqlCommand cmd = new MySqlCommand(b[0], cnn);
-                    MySqlDataReader reader = cmd.ExecuteReader();
+                    cnn.Open();
+                    cmd = new MySqlCommand(valintaData[2], cnn);
+                    reader = cmd.ExecuteReader();
                     if (reader.HasRows)
                     {
                         while (reader.Read())
                         {
-                            if (b[2] == "pelaaja")
-                            {
-                                string etunimi = reader.GetString(reader.GetOrdinal("etunimi"));
-                                string sukunimi = reader.GetString(reader.GetOrdinal("sukunimi"));
-                                Console.WriteLine(etunimi + " " + sukunimi);
-                            }
-                            else {
-                                string nimi = reader.GetString(reader.GetOrdinal("nimi"));
-                                Console.WriteLine(nimi);
-                            }
+                            string nimi = reader.GetString(reader.GetOrdinal("nimi"));
+                            Console.WriteLine(nimi);
+
                         }
                         cnn.Close();
-                        FinalPrint(b, data);
                     }
-                    
+                    Console.WriteLine(" ");
+                    Console.WriteLine(valintaData[3]);
+                    string hakusana = Console.ReadLine();
+
+                    cnn.Open();
+                    cmd = new MySqlCommand((data[dataPaikka] + hakusana + "\";"), cnn);
+                    Console.WriteLine("pääsit iffin ohi");
                 }
-            }
-            public void FinalPrint(string[] b, string[] data)
-            {
-                string connetionString = null;
-                MySqlConnection cnn;
-                connetionString = "server=localhost;database=Pelitietokanta;uid=root;pwd=moi;";
-                cnn = new MySqlConnection(connetionString);
-                cnn.Open();
-                Console.WriteLine(" ");
-                Console.WriteLine(b[1]);
-                string hakusana = Console.ReadLine();
-                int dataPaikka = Convert.ToInt32(b[3]) + 2;
-                MySqlCommand cmd = new MySqlCommand(data[dataPaikka] + hakusana + "\";", cnn);
-                MySqlDataReader reader = cmd.ExecuteReader();
-                switch (b[2])
+                else
                 {
-                    case "peli":
-                        switch (b[4])
+                    Console.WriteLine("pääsit elsen ohi");
+                    cnn.Open();
+                    cmd = new MySqlCommand(data[dataPaikka], cnn);
+                }
+                reader = cmd.ExecuteReader();
+                //valitsee mikä komento pyörii
+                if (reader.HasRows)
+                {
+                    Console.WriteLine("pääsit kaikkien ohi");
+                    while (reader.Read())
+                    {
+                        switch (valintaData[0])
                         {
                             case "1":
-                                if (reader.HasRows)
+                                switch (valintaData[1])
                                 {
-                                    while (reader.Read())
-                                    {
-                                        string nimi = reader.GetString(reader.GetOrdinal("nimi"));
-                                        string globaaliPeliaika = reader.GetString(reader.GetOrdinal("GlobaaliPeliaika"));
-                                        Console.WriteLine("Pelin nimi: " + nimi + " ja Globaali peliaika: " + globaaliPeliaika);
-                                    }
+                                    case "1":
+                                        Console.WriteLine("pelit eka");
+                                        break;
+                                    case "2":
+                                        Console.WriteLine("pelit toka");
+                                        break;
+                                    case "3":
+                                        Console.WriteLine("pelit kolmas");
+                                        break;
+                                    default:
+                                        break;
+
                                 }
                                 break;
                             case "2":
+                                switch (valintaData[1])
+                                {
+                                    case "1":
+                                        Console.WriteLine("pelistudio eka");
+                                        break;
+                                    case "2":
+                                        Console.WriteLine("pelistudio toka");
+                                        break;
+                                    case "3":
+                                        Console.WriteLine("pelistudio kolmas");
+                                        break;
+                                    default:
+                                        break;
 
+                                }
                                 break;
                             case "3":
+                                switch (valintaData[1])
+                                {
+                                    case "1":
+                                        Console.WriteLine("pelaaja eka");
+                                        break;
+                                    case "2":
+                                        Console.WriteLine("pelaaja toka");
+                                        break;
+                                    case "3":
+                                        Console.WriteLine("pelaaja kolmas");
+                                        break;
+                                    default:
+                                        break;
 
+                                }
                                 break;
                             default:
                                 break;
 
                         }
-                        break;
-                    case "pelistudio":
-
-                        break;
-                    case "pelaaja":
-
-                        break;
-                    default:
-                        break;
-
+                    }
                 }
                 Console.WriteLine("Poistu painamalla näppäintä");
                 Console.ReadLine();
@@ -177,6 +195,11 @@ namespace TietokantaTesti
         }
         public class Tiedot
         {
+            /*
+             * täällä säilytetään data
+             * jokaista kysymystä vastaava sql löytyy kolme pistettä alempaa
+             * kaikki ei ole vielä täytetty
+            */
             string[] aloitus = {
                 "Pelit",
                 "Pelistudiot",
@@ -185,20 +208,46 @@ namespace TietokantaTesti
 
             string[] peli = {
                 "Globaali käytetty peliaika per peli",
+
                 "Käytetty raha per peli",
+
                 "Pelin sisäisen tiettyjen tapahtumien määrä",
-                "select Peli.nimi, sum(datediff(Pelisessio.loppuaika, Pelisessio.alkuaika)) as GlobaaliPeliaika from Pelisessio, Peli where Peli.id = Pelisessio.peli_ID and Peli.nimi = \"",
-                "select sum(Rahasiirto.summa), Peli.nimi from Rahasiirto, Pelisessio, Peli where Rahasiirto.sessio_ID = Pelisessio.id and Pelisessio.peli_ID = Peli.id and Peli.nimi = \"",
-                ""
+
+                "select Peli.nimi, sum(datediff(Pelisessio.loppuaika, Pelisessio.alkuaika)) as " +
+                "GlobaaliPeliaika from Pelisessio, Peli where Peli.id = Pelisessio.peli_ID and Peli.nimi = \"",
+
+                "select * from Pelaaja",
+
+                "select * from Pelaaja"
             };
 
             string[] pelistudiot = {
                 "Hae kaikki tietyn pelistudion julkaistut pelit",
+
                 "Eniten pelaajia omaava pelistudio",
+
                 "Eniten rahaa tekevä studio",
-                "",
-                "",
-                ""
+
+                "select * from Pelaaja",
+
+                "select count(Pelaaja.id) as Pelaajia, Pelistudio.nimi as Pelistudion_nimi from Pelaaja, Pelistudio, Pelaa, Peli " +
+                "where Pelaa.pelaaja_ID = Pelaaja.id and Pelaa.peli_ID = Peli.id and Peli.studio_ID = Pelistudio.id group by " +
+                "Pelistudio.nimi order by count(pelaaja.id) desc;",
+
+                "select * from Pelaaja"
+            };
+            string[] pelaajat = {
+                "Hae eniten peliin rahaa käyttäneet pelaajat",
+
+                "Käytetty peliaika per pelaaja per peli",
+
+                "Käytetty raha per pelitunti ",
+
+                "select * from Pelaaja",
+
+                "select * from Pelaaja",
+
+                "select * from Pelaaja"
             };
             public string[] data(int numero)
             {
@@ -210,6 +259,8 @@ namespace TietokantaTesti
                         return (peli);
                     case 3:
                         return (pelistudiot);
+                    case 4:
+                        return (pelaajat);
                     default:
                         return (null);
                 }
