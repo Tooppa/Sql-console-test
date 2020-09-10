@@ -11,16 +11,11 @@ namespace TietokantaTesti
     {
         static void Main(string[] args)
         {
-            string connetionString = null;
-            MySqlConnection cnn;
-            connetionString = "server=localhost;database=Pelitietokanta;uid=root;pwd=moi;";
-            cnn = new MySqlConnection(connetionString);
-
             Tiedot array = new Tiedot();
             for (int i = 1; i < 3; i++) {
                 string[] test = array.data(i);
                 Kysely valinta = new Kysely(test);
-                valinta.valitse();
+                valinta.Valitse();
             }
             /*
             // Tietokantayhteyden luominen
@@ -69,7 +64,7 @@ namespace TietokantaTesti
                 data = a;
             }
 
-            public void valitse()
+            public void Valitse()
             {
                 for (int i = 0; i < 3; i++)
                 {
@@ -81,50 +76,69 @@ namespace TietokantaTesti
                 switch (valinta)
                 {
                     case 1:
-                        //sql haulla vaihtoehdot näkyviin
-                        if (data[0] == "Pelit")
-                        {
-                            Console.WriteLine("Minkä pelin tiedot haluat nähdä");
-                            string hakusana = Console.ReadLine();
-                        }
-                        else
-                        {
-                            Console.WriteLine("test");
-                            Console.ReadLine();
-                            //sql koodi
-                        }
+                        string[] peli = { 
+                            "select * from Peli",
+                            "Kirjoita yhden pelin nimi"
+                        };
+                        Sql(peli);
                         break;
                     case 2:
-                        //sql haulla vaihtoehdot näkyviin
-                        if (data[0] == "Pelit")
-                        {
-                            Console.WriteLine("Minkä pelistudion tiedot haluat nähdä");
-                            string hakusana = Console.ReadLine();
-                        }
-                        else
-                        {
-                            Console.WriteLine("test");
-                            Console.ReadLine();
-                            //sql koodi
-                        }
+                        string[] pelistudio = {
+                            "select * from Pelistudio",
+                            "Kirjoita yhden pelistudion nimi"
+                        };
+                        Sql(pelistudio);
                         break;
                     case 3:
-                        //sql haulla vaihtoehdot näkyviin
-                        if (data[0] == "Pelit")
-                        {
-                            Console.WriteLine("Kenen pelaajan tiedot haluat nähdä");
-                            string hakusana = Console.ReadLine();
-                        }
-                        else
-                        {
-                            Console.WriteLine("test");
-                            Console.ReadLine();
-                            //sql koodi
-                        }
+                        string[] pelaaja = {
+                            "select * from Pelaaja",
+                            "Kirjoita yhden pelaajan nimi",
+                            "pelaaja"
+                        };
+                        Sql(pelaaja);
                         break;
                     default:
                         break;
 
+                }
+            }
+            public void Sql(string[] b)
+            {
+                string connetionString = null;
+                MySqlConnection cnn;
+                connetionString = "server=localhost;database=Pelitietokanta;uid=root;pwd=moi;";
+                cnn = new MySqlConnection(connetionString);
+                cnn.Open();
+                if (data[0] == "Pelit")
+                {
+                    MySqlCommand cmd = new MySqlCommand(b[0], cnn);
+                    MySqlDataReader reader = cmd.ExecuteReader();
+                    if (reader.HasRows)
+                    {
+                        while (reader.Read())
+                        {
+                            if (b[2] == "pelaaja")
+                            {
+                                string etunimi = reader.GetString(reader.GetOrdinal("etunimi"));
+                                string sukunimi = reader.GetString(reader.GetOrdinal("sukunimi"));
+                                Console.WriteLine(etunimi + " " + sukunimi);
+                            }
+                            else {
+                                string nimi = reader.GetString(reader.GetOrdinal("nimi"));
+                                Console.WriteLine(nimi);
+                            }
+                        }
+                    }
+                    cnn.Close();
+                    Console.WriteLine(" ");
+                    Console.WriteLine(b[1]);
+                    string hakusana = Console.ReadLine();
+                }
+                else
+                {
+                    Console.WriteLine("test");
+                    Console.ReadLine();
+                    //sql koodi
                 }
             }
         }
