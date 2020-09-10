@@ -43,15 +43,13 @@ namespace TietokantaTesti
                     Console.WriteLine((i + 1) + ": " + data[i]);
                 }
                 tokaValinta = Console.ReadLine();
-                data = array.data(Convert.ToInt32(tokaValinta) + 1);
+                data = array.data(Convert.ToInt32(ekaValinta) + 1);
                 switch (ekaValinta)
                 {
                     case "1":
                         string[] peli = {
                             ekaValinta,
-                            tokaValinta,
-                            "select * from Peli",
-                            "Kirjoita yhden pelin nimi"
+                            tokaValinta
                             };
                         FinalPrint(peli, data);
                         break;
@@ -80,8 +78,6 @@ namespace TietokantaTesti
                  *
                  *0ekavalinta
                  *1tokavalinta
-                 *2sql
-                 *3pyynto
                  *
                  *data sisältö
                  *
@@ -93,10 +89,10 @@ namespace TietokantaTesti
                 cnn = new MySqlConnection(connetionString);
                 MySqlDataReader reader;
                 MySqlCommand cmd;
+                cnn.Open();
                 if (valintaData[0] == "1")//pyörii kun eka valinta oli pelit
                 {
-                    cnn.Open();
-                    cmd = new MySqlCommand(valintaData[2], cnn);
+                    cmd = new MySqlCommand("select * from Peli", cnn);
                     reader = cmd.ExecuteReader();
                     if (reader.HasRows)
                     {
@@ -106,27 +102,20 @@ namespace TietokantaTesti
                             Console.WriteLine(nimi);
 
                         }
-                        cnn.Close();
                     }
-                    Console.WriteLine(" ");
-                    Console.WriteLine(valintaData[3]);
+                    Console.WriteLine("\nKirjoita yhden pelin nimi");
                     string hakusana = Console.ReadLine();
 
-                    cnn.Open();
-                    cmd = new MySqlCommand((data[dataPaikka] + hakusana + "\";"), cnn);
-                    Console.WriteLine("pääsit iffin ohi");
+                    cmd = new MySqlCommand($"{ data[dataPaikka] }{ hakusana }\";", cnn);
                 }
                 else
                 {
-                    Console.WriteLine("pääsit elsen ohi");
-                    cnn.Open();
                     cmd = new MySqlCommand(data[dataPaikka], cnn);
                 }
                 reader = cmd.ExecuteReader();
                 //valitsee mikä komento pyörii
                 if (reader.HasRows)
                 {
-                    Console.WriteLine("pääsit kaikkien ohi");
                     while (reader.Read())
                     {
                         switch (valintaData[0])
