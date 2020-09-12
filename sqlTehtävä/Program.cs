@@ -23,16 +23,16 @@ namespace TietokantaTesti
             {
                 Console.WriteLine((i + 1) + ": " + data[i]);
             }
-            Console.WriteLine("valitse numero 1-3");
+            Console.WriteLine("\nvalitse numero 1-3");
             ekaValinta = Console.ReadLine();
 
-            //Valitaan datasta seuraava 
+            //Valitaan datasta ensimmäisen valinnan mukaan
             data = array.data(ekaValinta);
             for (int i = 0; i < 3; i++)
             {
                 Console.WriteLine((i + 1) + ": " + data[i]);
             }
-            Console.WriteLine("valitse numero 1-3");
+            Console.WriteLine("\nvalitse numero 1-3");
             tokaValinta = Console.ReadLine();
             valinta.FinalPrint(ekaValinta, tokaValinta, data);
         }
@@ -57,9 +57,15 @@ namespace TietokantaTesti
                 MySqlDataReader reader;
                 MySqlCommand cmd;
                 cnn.Open();
-                if (ekaValinta == "1")//pyörii kun eka valinta oli pelit
+                if (ekaValinta == "1" || (ekaValinta == "2" && tokaValinta == "1"))//pyörii kun eka valinta oli pelit. iffiin lisä ehto jos haluaa jonkun muunkin sql koodin käyttävän hakusanaa
                 {
-                    cmd = new MySqlCommand("select * from Peli", cnn);
+                    if (ekaValinta == "1")
+                    {
+                        cmd = new MySqlCommand("select * from Peli", cnn);
+                    }else
+                    {
+                        cmd = new MySqlCommand("select * from Pelistudio", cnn);
+                    }
                     reader = cmd.ExecuteReader();
                     if (reader.HasRows)
                     {
@@ -69,7 +75,7 @@ namespace TietokantaTesti
                             Console.WriteLine(nimi);
                         }
                     }
-                    Console.WriteLine("\nKirjoita yhden pelin nimi");
+                    Console.WriteLine("\nKirjoita yhden pelin nimi\n");
                     string hakusana = Console.ReadLine();
                     cnn.Close();
                     cnn.Open();
@@ -80,6 +86,7 @@ namespace TietokantaTesti
                 {
                     cmd = new MySqlCommand(data[dataPaikka], cnn);
                 }
+                Console.WriteLine("");
                 reader = cmd.ExecuteReader();
                 //valitsee mikä komento pyörii
                 if (reader.HasRows)
@@ -92,13 +99,19 @@ namespace TietokantaTesti
                                 switch (tokaValinta)
                                 {
                                     case "1":
-                                        Console.WriteLine("pelit eka");
+                                        string peliaikanimi = reader.GetString(reader.GetOrdinal("nimi"));
+                                        string peliaika = reader.GetString(reader.GetOrdinal("Peliaika"));
+                                        Console.WriteLine(peliaikanimi + " " + peliaika);
                                         break;
                                     case "2":
-                                        Console.WriteLine("pelit toka");
+                                        string summanimi = reader.GetString(reader.GetOrdinal("nimi"));
+                                        string summa = reader.GetString(reader.GetOrdinal("summa"));
+                                        Console.WriteLine(summanimi + " " + summa);
                                         break;
                                     case "3":
-                                        Console.WriteLine("pelit kolmas");
+                                        string aikanimi = reader.GetString(reader.GetOrdinal("nimi"));
+                                        string tyyppi = reader.GetString(reader.GetOrdinal("tyyppi"));
+                                        Console.WriteLine(aikanimi + " " + tyyppi);
                                         break;
                                     default:
                                         break;
@@ -109,10 +122,14 @@ namespace TietokantaTesti
                                 switch (tokaValinta)
                                 {
                                     case "1":
-                                        Console.WriteLine("pelistudio eka");
+                                        string pelistudio = reader.GetString(reader.GetOrdinal("pelistudio"));
+                                        string peli = reader.GetString(reader.GetOrdinal("peli"));
+                                        Console.WriteLine(pelistudio + " " + peli);
                                         break;
                                     case "2":
-                                        Console.WriteLine("pelistudio toka");
+                                        string studionimi = reader.GetString(reader.GetOrdinal("pelistudio"));
+                                        string pelaajia = reader.GetString(reader.GetOrdinal("pelaajia"));
+                                        Console.WriteLine(studionimi + " " + pelaajia);
                                         break;
                                     case "3":
                                         Console.WriteLine("pelistudio kolmas");
@@ -126,7 +143,10 @@ namespace TietokantaTesti
                                 switch (tokaValinta)
                                 {
                                     case "1":
-                                        Console.WriteLine("pelaaja eka");
+                                        string etunimi = reader.GetString(reader.GetOrdinal("etunimi"));
+                                        string sukunimi = reader.GetString(reader.GetOrdinal("sukunimi"));
+                                        string rahasumma = reader.GetString(reader.GetOrdinal("summa"));
+                                        Console.WriteLine(etunimi + " " + sukunimi + " " + rahasumma);
                                         break;
                                     case "2":
                                         Console.WriteLine("pelaaja toka");
@@ -145,7 +165,7 @@ namespace TietokantaTesti
                         }
                     }
                 }
-                Console.WriteLine("Poistu painamalla näppäintä");
+                Console.WriteLine("\nPoistu painamalla näppäintä");
                 Console.ReadLine();
                 cnn.Close();
             }
@@ -170,15 +190,18 @@ namespace TietokantaTesti
 
                 "Pelin sisäisen tiettyjen tapahtumien määrä",
 
-                "select Peli.nimi, sum(datediff(Pelisessio.loppuaika, Pelisessio.alkuaika)) as " +
-                "GlobaaliPeliaika from Pelisessio, Peli where Peli.id = Pelisessio.peli_ID and Peli.nimi = \"",
+                "select Peli.nimi, timediff(Pelisessio.loppuaika, Pelisessio.alkuaika) as " +
+                "Peliaika from Pelisessio, Peli where Peli.id = Pelisessio.peli_ID and Peli.nimi = \"",
 
-                "select Peli.nimi, sum(datediff(Pelisessio.loppuaika, Pelisessio.alkuaika)) as " +
-                "GlobaaliPeliaika from Pelisessio, Peli where Peli.id = Pelisessio.peli_ID and Peli.nimi = \"",
+                "select sum(Rahasiirto.summa) as summa, Peli.nimi from Rahasiirto, Pelisessio, Peli " +
+                "where Rahasiirto.sessio_ID = Pelisessio.id and Pelisessio.peli_ID = Peli.id and Peli.nimi = \"",
 
-                "select Peli.nimi, sum(datediff(Pelisessio.loppuaika, Pelisessio.alkuaika)) as " +
-                "GlobaaliPeliaika from Pelisessio, Peli where Peli.id = Pelisessio.peli_ID and Peli.nimi = \""
+                "select Peli.nimi, Pelitapahtuma_Tyyppi.tyyppi_nimi as tyyppi, Pelitapahtuma.aikaleima from " +
+                "Pelitapahtuma, Pelitapahtuma_Tyyppi, Pelisessio, Peli where Pelitapahtuma.tyyppi_ID = Pelitapahtuma_Tyyppi.id " +
+                "and sessio_ID = Pelisessio.id and Pelisessio.peli_ID = Peli.id and Peli.nimi = \""
             };
+            //tämä viiva \ ja lainausmerkki tekee lainausmerkin stringin sisään
+            //loppu on siis formaattia Peli.nimi = "hakusana";
 
             string[] pelistudiot = {
                 "Hae kaikki tietyn pelistudion julkaistut pelit",
@@ -187,9 +210,9 @@ namespace TietokantaTesti
 
                 "Eniten rahaa tekevä studio",
 
-                "select * from Pelaaja",
+                "select Pelistudio.nimi as pelistudio, Peli.nimi as Peli from Pelistudio, Peli where Peli.studio_ID = Pelistudio.id and Pelistudio.nimi = \"",
 
-                "select count(Pelaaja.id) as Pelaajia, Pelistudio.nimi as Pelistudion_nimi from Pelaaja, Pelistudio, Pelaa, Peli " +
+                "select count(Pelaaja.id) as pelaajia, Pelistudio.nimi as pelistudio from Pelaaja, Pelistudio, Pelaa, Peli " +
                 "where Pelaa.pelaaja_ID = Pelaaja.id and Pelaa.peli_ID = Peli.id and Peli.studio_ID = Pelistudio.id group by " +
                 "Pelistudio.nimi order by count(pelaaja.id) desc;",
 
@@ -202,7 +225,9 @@ namespace TietokantaTesti
 
                 "Käytetty raha per pelitunti ",
 
-                "select * from Pelaaja",
+                "select Pelaaja.etunimi, Pelaaja.sukunimi, sum(Rahasiirto.summa) as summa from Rahasiirto, Pelisessio, Pelaaja where " +
+                "Rahasiirto.sessio_ID = Pelisessio.id and Pelisessio.pelaaja_ID = Pelaaja.id group " +
+                "by Pelaaja.etunimi order by sum(Rahasiirto.summa) desc;",
 
                 "select * from Pelaaja",
 
