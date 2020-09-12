@@ -11,86 +11,53 @@ namespace TietokantaTesti
     {
         static void Main()
         {
+            string ekaValinta;
+            string tokaValinta;
+            Tiedot array = new Tiedot();
             Kysely valinta = new Kysely();
-            valinta.Valitse();
+
+            //Ensimmäinen kysely valitaan data(1) joka sisältää peli, pelistudio, pelaaja 
+            string[] data = array.data("0");
+            //Tulostetaan vaihtoehdot
+            for (int i = 0; i < 3; i++)
+            {
+                Console.WriteLine((i + 1) + ": " + data[i]);
+            }
+            Console.WriteLine("valitse numero 1-3");
+            ekaValinta = Console.ReadLine();
+
+            //Valitaan datasta seuraava 
+            data = array.data(ekaValinta);
+            for (int i = 0; i < 3; i++)
+            {
+                Console.WriteLine((i + 1) + ": " + data[i]);
+            }
+            Console.WriteLine("valitse numero 1-3");
+            tokaValinta = Console.ReadLine();
+            valinta.FinalPrint(ekaValinta, tokaValinta, data);
         }
         public class Kysely
         {
             private MySqlConnection cnn;
             private string connetionString;
-            private string ekaValinta;
-            private string tokaValinta;
-            private Tiedot array;
             public Kysely()
             {
                 connetionString = "server=localhost;database=Pelitietokanta;uid=root;pwd=moi;";
-                ekaValinta = null;
-                tokaValinta = null;
-                array = new Tiedot();
+                cnn = new MySqlConnection(connetionString);
             }
-            public void Valitse()
+            public void FinalPrint(string ekaValinta, string tokaValinta, string[] data)
             {
-                string[] data = array.data(1);
-                for (int i = 0; i < 3; i++)
-                {
-                    Console.WriteLine((i + 1) + ": " + data[i]);
-                }
-                Console.WriteLine("valitse numero 1-3");
-                ekaValinta = Console.ReadLine();
-                data = array.data(Convert.ToInt32(ekaValinta) + 1);
-                for (int i = 0; i < 3; i++)
-                {
-                    Console.WriteLine((i + 1) + ": " + data[i]);
-                }
-                tokaValinta = Console.ReadLine();
-                data = array.data(Convert.ToInt32(ekaValinta) + 1);
-                switch (ekaValinta)
-                {
-                    case "1":
-                        string[] peli = {
-                            ekaValinta,
-                            tokaValinta
-                            };
-                        FinalPrint(peli, data);
-                        break;
-                    case "2":
-                        string[] pelistudio = {
-                            ekaValinta,
-                            tokaValinta
-                            };
-                        FinalPrint(pelistudio, data);
-                        break;
-                    case "3":
-                        string[] pelaaja = {
-                            ekaValinta,
-                            tokaValinta
-                            };
-                        FinalPrint(pelaaja, data);
-                        break;
-                    default:
-                        break;
-                }
-            }
-            public void FinalPrint(string[] valintaData, string[] data)
-            {
-                /*
-                 *valintaData sisältö
-                 *
-                 *0ekavalinta
-                 *1tokavalinta
-                 *
-                 *data sisältö
+                /*data sisältö
                  *
                  *valittu pää alue
                  *jossa kolme käskyä
                  *ja vastaava sql koodi
                 */
-                int dataPaikka = (Convert.ToInt32(valintaData[1]) + 2);
-                cnn = new MySqlConnection(connetionString);
+                int dataPaikka = (Convert.ToInt32(tokaValinta) + 2);
                 MySqlDataReader reader;
                 MySqlCommand cmd;
                 cnn.Open();
-                if (valintaData[0] == "1")//pyörii kun eka valinta oli pelit
+                if (ekaValinta == "1")//pyörii kun eka valinta oli pelit
                 {
                     cmd = new MySqlCommand("select * from Peli", cnn);
                     reader = cmd.ExecuteReader();
@@ -119,10 +86,10 @@ namespace TietokantaTesti
                 {
                     while (reader.Read())
                     {
-                        switch (valintaData[0])
+                        switch (ekaValinta)
                         {
                             case "1":
-                                switch (valintaData[1])
+                                switch (tokaValinta)
                                 {
                                     case "1":
                                         Console.WriteLine("pelit eka");
@@ -139,7 +106,7 @@ namespace TietokantaTesti
                                 }
                                 break;
                             case "2":
-                                switch (valintaData[1])
+                                switch (tokaValinta)
                                 {
                                     case "1":
                                         Console.WriteLine("pelistudio eka");
@@ -156,7 +123,7 @@ namespace TietokantaTesti
                                 }
                                 break;
                             case "3":
-                                switch (valintaData[1])
+                                switch (tokaValinta)
                                 {
                                     case "1":
                                         Console.WriteLine("pelaaja eka");
@@ -241,17 +208,17 @@ namespace TietokantaTesti
 
                 "select * from Pelaaja"
             };
-            public string[] data(int numero)
+            public string[] data(string numero)
             {
                 switch (numero)
                 {
-                    case 1:
+                    case "0":
                         return (aloitus);
-                    case 2:
+                    case "1":
                         return (peli);
-                    case 3:
+                    case "2":
                         return (pelistudiot);
-                    case 4:
+                    case "3":
                         return (pelaajat);
                     default:
                         return (null);
