@@ -106,17 +106,18 @@ namespace TietokantaTesti
                                     case "1":
                                         ensimmainen = reader.GetString(reader.GetOrdinal("nimi"));
                                         toinen = reader.GetString(reader.GetOrdinal("Peliaika"));
-                                        Console.WriteLine(ensimmainen + " " + toinen);
+                                        Console.WriteLine("Pelin nimi: " + ensimmainen + ", käytetty peliaika: " + toinen);
                                         break;
                                     case "2":
                                         ensimmainen = reader.GetString(reader.GetOrdinal("nimi"));
                                         toinen = reader.GetString(reader.GetOrdinal("summa"));
-                                        Console.WriteLine(ensimmainen + " " + toinen);
+                                        Console.WriteLine("Pelin nimi: " + ensimmainen + ", käytetty summa: " + toinen);
                                         break;
                                     case "3":
                                         ensimmainen = reader.GetString(reader.GetOrdinal("nimi"));
                                         toinen = reader.GetString(reader.GetOrdinal("tyyppi"));
-                                        Console.WriteLine(ensimmainen + " " + toinen);
+                                        kolmas = reader.GetString(reader.GetOrdinal("aikaleima"));
+                                        Console.WriteLine("Pelin nimi: " + ensimmainen + ", tapahtuman nimi: " + toinen + ", aikaleima: " + kolmas);
                                         break;
                                     default:
                                         break;
@@ -129,17 +130,17 @@ namespace TietokantaTesti
                                     case "1":
                                         ensimmainen = reader.GetString(reader.GetOrdinal("pelistudio"));
                                         toinen = reader.GetString(reader.GetOrdinal("peli"));
-                                        Console.WriteLine(ensimmainen + " " + toinen);
+                                        Console.WriteLine("Pelistudion nimi: " + ensimmainen + ", pelin nimi: " + toinen);
                                         break;
                                     case "2":
                                         ensimmainen = reader.GetString(reader.GetOrdinal("pelistudio"));
                                         toinen = reader.GetString(reader.GetOrdinal("pelaajia"));
-                                        Console.WriteLine(ensimmainen + " " + toinen);
+                                        Console.WriteLine("Pelistudion nimi: " + ensimmainen + ", pelaajien määrä: " + toinen);
                                         break;
                                     case "3":
                                         ensimmainen = reader.GetString(reader.GetOrdinal("nimi"));
                                         toinen = reader.GetString(reader.GetOrdinal("voitot"));
-                                        Console.WriteLine(ensimmainen + " " + toinen);
+                                        Console.WriteLine("Pelistudion nimi: " + ensimmainen + ", voittojen määrä: " + toinen);
                                         break;
                                     default:
                                         break;
@@ -153,15 +154,17 @@ namespace TietokantaTesti
                                         ensimmainen = reader.GetString(reader.GetOrdinal("etunimi"));
                                         toinen = reader.GetString(reader.GetOrdinal("sukunimi"));
                                         kolmas = reader.GetString(reader.GetOrdinal("summa"));
-                                        Console.WriteLine(ensimmainen + " " + toinen + " " + kolmas);
+                                        Console.WriteLine("Pelaajan nimi: " + ensimmainen + " " + toinen + ", pelaajan käyttämä rahamäärä: " + kolmas);
                                         break;
                                     case "2":
                                         ensimmainen = reader.GetString(reader.GetOrdinal("etunimi"));
                                         toinen = reader.GetString(reader.GetOrdinal("sukunimi"));
                                         kolmas = reader.GetString(reader.GetOrdinal("nimimerkki"));
-                                        neljas = reader.GetString(reader.GetOrdinal("peliaika"));
-                                        viides = reader.GetString(reader.GetOrdinal("peli"));
-                                        Console.WriteLine(ensimmainen + " " + toinen + " " + kolmas + " " + neljas + " " + viides);
+                                        neljas = reader.GetString(reader.GetOrdinal("peli"));
+                                        viides = reader.GetString(reader.GetOrdinal("peliaika"));
+                                        Console.WriteLine("Pelaajan nimi: " + ensimmainen + " " + toinen + ", nimimerkki: " + kolmas + 
+                                            ", pelin nimi: " + neljas + ", käytetty peliaika: " + viides
+                                        );
                                         break;
                                     case "3":
                                         Console.WriteLine("pelaaja kolmas");
