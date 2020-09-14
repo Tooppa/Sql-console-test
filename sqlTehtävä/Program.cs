@@ -54,6 +54,11 @@ namespace TietokantaTesti
                  *ja vastaava sql koodi
                 */
                 int dataPaikka = (Convert.ToInt32(tokaValinta) + 2);
+                string ensimmainen;
+                string toinen;
+                string kolmas;
+                string neljas;
+                string viides;
                 MySqlDataReader reader;
                 MySqlCommand cmd;
                 cnn.Open();
@@ -99,19 +104,19 @@ namespace TietokantaTesti
                                 switch (tokaValinta)
                                 {
                                     case "1":
-                                        string peliaikanimi = reader.GetString(reader.GetOrdinal("nimi"));
-                                        string peliaika = reader.GetString(reader.GetOrdinal("Peliaika"));
-                                        Console.WriteLine(peliaikanimi + " " + peliaika);
+                                        ensimmainen = reader.GetString(reader.GetOrdinal("nimi"));
+                                        toinen = reader.GetString(reader.GetOrdinal("Peliaika"));
+                                        Console.WriteLine(ensimmainen + " " + toinen);
                                         break;
                                     case "2":
-                                        string summanimi = reader.GetString(reader.GetOrdinal("nimi"));
-                                        string summa = reader.GetString(reader.GetOrdinal("summa"));
-                                        Console.WriteLine(summanimi + " " + summa);
+                                        ensimmainen = reader.GetString(reader.GetOrdinal("nimi"));
+                                        toinen = reader.GetString(reader.GetOrdinal("summa"));
+                                        Console.WriteLine(ensimmainen + " " + toinen);
                                         break;
                                     case "3":
-                                        string aikanimi = reader.GetString(reader.GetOrdinal("nimi"));
-                                        string tyyppi = reader.GetString(reader.GetOrdinal("tyyppi"));
-                                        Console.WriteLine(aikanimi + " " + tyyppi);
+                                        ensimmainen = reader.GetString(reader.GetOrdinal("nimi"));
+                                        toinen = reader.GetString(reader.GetOrdinal("tyyppi"));
+                                        Console.WriteLine(ensimmainen + " " + toinen);
                                         break;
                                     default:
                                         break;
@@ -122,17 +127,19 @@ namespace TietokantaTesti
                                 switch (tokaValinta)
                                 {
                                     case "1":
-                                        string pelistudio = reader.GetString(reader.GetOrdinal("pelistudio"));
-                                        string peli = reader.GetString(reader.GetOrdinal("peli"));
-                                        Console.WriteLine(pelistudio + " " + peli);
+                                        ensimmainen = reader.GetString(reader.GetOrdinal("pelistudio"));
+                                        toinen = reader.GetString(reader.GetOrdinal("peli"));
+                                        Console.WriteLine(ensimmainen + " " + toinen);
                                         break;
                                     case "2":
-                                        string studionimi = reader.GetString(reader.GetOrdinal("pelistudio"));
-                                        string pelaajia = reader.GetString(reader.GetOrdinal("pelaajia"));
-                                        Console.WriteLine(studionimi + " " + pelaajia);
+                                        ensimmainen = reader.GetString(reader.GetOrdinal("pelistudio"));
+                                        toinen = reader.GetString(reader.GetOrdinal("pelaajia"));
+                                        Console.WriteLine(ensimmainen + " " + toinen);
                                         break;
                                     case "3":
-                                        Console.WriteLine("pelistudio kolmas");
+                                        ensimmainen = reader.GetString(reader.GetOrdinal("nimi"));
+                                        toinen = reader.GetString(reader.GetOrdinal("voitot"));
+                                        Console.WriteLine(ensimmainen + " " + toinen);
                                         break;
                                     default:
                                         break;
@@ -143,13 +150,18 @@ namespace TietokantaTesti
                                 switch (tokaValinta)
                                 {
                                     case "1":
-                                        string etunimi = reader.GetString(reader.GetOrdinal("etunimi"));
-                                        string sukunimi = reader.GetString(reader.GetOrdinal("sukunimi"));
-                                        string rahasumma = reader.GetString(reader.GetOrdinal("summa"));
-                                        Console.WriteLine(etunimi + " " + sukunimi + " " + rahasumma);
+                                        ensimmainen = reader.GetString(reader.GetOrdinal("etunimi"));
+                                        toinen = reader.GetString(reader.GetOrdinal("sukunimi"));
+                                        kolmas = reader.GetString(reader.GetOrdinal("summa"));
+                                        Console.WriteLine(ensimmainen + " " + toinen + " " + kolmas);
                                         break;
                                     case "2":
-                                        Console.WriteLine("pelaaja toka");
+                                        ensimmainen = reader.GetString(reader.GetOrdinal("etunimi"));
+                                        toinen = reader.GetString(reader.GetOrdinal("sukunimi"));
+                                        kolmas = reader.GetString(reader.GetOrdinal("nimimerkki"));
+                                        neljas = reader.GetString(reader.GetOrdinal("peliaika"));
+                                        viides = reader.GetString(reader.GetOrdinal("peli"));
+                                        Console.WriteLine(ensimmainen + " " + toinen + " " + kolmas + " " + neljas + " " + viides);
                                         break;
                                     case "3":
                                         Console.WriteLine("pelaaja kolmas");
@@ -216,7 +228,9 @@ namespace TietokantaTesti
                 "where Pelaa.pelaaja_ID = Pelaaja.id and Pelaa.peli_ID = Peli.id and Peli.studio_ID = Pelistudio.id group by " +
                 "Pelistudio.nimi order by count(pelaaja.id) desc;",
 
-                "select * from Pelaaja"
+                "select sum(Rahasiirto.summa) as voitot, Pelistudio.Nimi from Rahasiirto, Pelisessio, pelistudio, Peli where " +
+                "Rahasiirto.sessio_ID = Pelisessio.id and Pelisessio.peli_ID = Peli.id " +
+                "and Peli.studio_ID = Pelistudio.id group by Pelistudio.nimi order by Voitot desc;"
             };
             string[] pelaajat = {
                 "Hae eniten peliin rahaa käyttäneet pelaajat",
@@ -229,7 +243,10 @@ namespace TietokantaTesti
                 "Rahasiirto.sessio_ID = Pelisessio.id and Pelisessio.pelaaja_ID = Pelaaja.id group " +
                 "by Pelaaja.etunimi order by sum(Rahasiirto.summa) desc;",
 
-                "select * from Pelaaja",
+                "select Pelaa.nimimerkki as nimimerkki, Pelaaja.etunimi, Pelaaja.sukunimi," +
+                "timediff(Pelisessio.loppuaika, Pelisessio.alkuaika) as peliaika, Peli.nimi as peli from " +
+                "Pelaaja, Pelisessio, Peli, Pelaa where Peli.id = Pelisessio.peli_ID and Pelisessio.pelaaja_ID = Pelaaja.id and " +
+                "Pelaa.peli_id = Peli.id and Pelaa.pelaaja_id = Pelaaja.id group by Pelaaja.etunimi;",
 
                 "select * from Pelaaja"
             };
