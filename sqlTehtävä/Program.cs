@@ -114,9 +114,12 @@ namespace TietokantaTesti
                                         Console.WriteLine("Pelin nimi: " + ensimmainen + ", käytetty peliaika: " + toinen);
                                         break;
                                     case "2":
-                                        ensimmainen = reader.GetString(reader.GetOrdinal("nimi"));
-                                        toinen = reader.GetString(reader.GetOrdinal("summa"));
-                                        Console.WriteLine("Pelin nimi: " + ensimmainen + ", käytetty summa: " + toinen);
+                                        if (!reader.IsDBNull(reader.GetOrdinal("nimi")))
+                                        {
+                                            ensimmainen = reader.GetString(reader.GetOrdinal("nimi"));
+                                            toinen = reader.GetString(reader.GetOrdinal("summa"));
+                                            Console.WriteLine("Pelin nimi: " + ensimmainen + ", käytetty summa: " + toinen);
+                                        }
                                         break;
                                     case "3":
                                         ensimmainen = reader.GetString(reader.GetOrdinal("nimi"));
