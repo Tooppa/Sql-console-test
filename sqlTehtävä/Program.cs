@@ -167,7 +167,10 @@ namespace TietokantaTesti
                                         );
                                         break;
                                     case "3":
-                                        Console.WriteLine("pelaaja kolmas");
+                                        ensimmainen = reader.GetString(reader.GetOrdinal("etunimi"));
+                                        toinen = reader.GetString(reader.GetOrdinal("sukunimi"));
+                                        kolmas = reader.GetString(reader.GetOrdinal("sessiomäärä"));
+                                        Console.WriteLine("Pelaajan nimi: " + ensimmainen + " " + toinen + ", pelaajan käyttämä rahamäärä: " + kolmas);
                                         break;
                                     default:
                                         break;
@@ -240,7 +243,7 @@ namespace TietokantaTesti
 
                 "Käytetty peliaika per pelaaja per peli",
 
-                "Käytetty raha per pelitunti ",
+                "Pelisessioiden määrä per pelaaja",
 
                 "select Pelaaja.etunimi, Pelaaja.sukunimi, sum(Rahasiirto.summa) as summa from Rahasiirto, Pelisessio, Pelaaja where " +
                 "Rahasiirto.sessio_ID = Pelisessio.id and Pelisessio.pelaaja_ID = Pelaaja.id group " +
@@ -251,7 +254,9 @@ namespace TietokantaTesti
                 "Pelaaja, Pelisessio, Peli, Pelaa where Peli.id = Pelisessio.peli_ID and Pelisessio.pelaaja_ID = Pelaaja.id and " +
                 "Pelaa.peli_id = Peli.id and Pelaa.pelaaja_id = Pelaaja.id group by Pelaaja.etunimi;",
 
-                "select * from Pelaaja"
+                "select Pelaaja.etunimi, Pelaaja.sukunimi, count(Pelisessio.id) as sessiomäärä from Pelaaja, " +
+                "Pelisessio, Peli where Peli.id = Pelisessio.peli_ID and Pelisessio.pelaaja_ID = Pelaaja.id " +
+                "group by Pelaaja.etunimi order by count(Pelisessio.id) desc;"
             };
             public string[] data(string numero)
             {
