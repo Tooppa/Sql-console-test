@@ -80,7 +80,7 @@ namespace TietokantaTesti
                             Console.WriteLine(nimi);
                         }
                     }
-                    Console.WriteLine("\nKirjoita yhden pelin nimi\n");
+                    Console.WriteLine("\nKirjoita yksi vaihtoehto\n");
                     string hakusana = Console.ReadLine();
                     cnn.Close();
                     cnn.Open();
