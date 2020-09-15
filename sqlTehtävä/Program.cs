@@ -169,8 +169,8 @@ namespace TietokantaTesti
                                     case "3":
                                         ensimmainen = reader.GetString(reader.GetOrdinal("etunimi"));
                                         toinen = reader.GetString(reader.GetOrdinal("sukunimi"));
-                                        kolmas = reader.GetString(reader.GetOrdinal("sessiomäärä"));
-                                        Console.WriteLine("Pelaajan nimi: " + ensimmainen + " " + toinen + ", pelaajan käyttämä rahamäärä: " + kolmas);
+                                        kolmas = reader.GetString(reader.GetOrdinal("sessiomaara"));
+                                        Console.WriteLine("Pelaajan nimi: " + ensimmainen + " " + toinen + ", pelaajan pelatut sessiot: " + kolmas);
                                         break;
                                     default:
                                         break;
@@ -254,7 +254,7 @@ namespace TietokantaTesti
                 "Pelaaja, Pelisessio, Peli, Pelaa where Peli.id = Pelisessio.peli_ID and Pelisessio.pelaaja_ID = Pelaaja.id and " +
                 "Pelaa.peli_id = Peli.id and Pelaa.pelaaja_id = Pelaaja.id group by Pelaaja.etunimi;",
 
-                "select Pelaaja.etunimi, Pelaaja.sukunimi, count(Pelisessio.id) as sessiomäärä from Pelaaja, " +
+                "select Pelaaja.etunimi, Pelaaja.sukunimi, count(Pelisessio.id) as sessiomaara from Pelaaja, " +
                 "Pelisessio, Peli where Peli.id = Pelisessio.peli_ID and Pelisessio.pelaaja_ID = Pelaaja.id " +
                 "group by Pelaaja.etunimi order by count(Pelisessio.id) desc;"
             };
