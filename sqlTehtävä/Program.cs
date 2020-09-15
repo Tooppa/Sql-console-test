@@ -7,8 +7,10 @@ namespace TietokantaTesti
     {
         static void Main()
         {
-            string ekaValinta;
-            string tokaValinta;
+            string ekaValinta = null;
+            string tokaValinta = null;
+            int numero1 = 0;
+            int numero2 = 0;
             Tiedot array = new Tiedot();
             Kysely valinta = new Kysely();
 
@@ -19,17 +21,24 @@ namespace TietokantaTesti
             {
                 Console.WriteLine((i + 1) + ": " + data[i]);
             }
-            Console.WriteLine("\nvalitse numero 1-3");
-            ekaValinta = Console.ReadLine();
-
+            while (numero1 > 3 || numero1 < 1)
+            {
+                Console.WriteLine("\nvalitse numero 1-3");
+                ekaValinta = Console.ReadLine();
+                numero1 = Convert.ToInt32(ekaValinta);
+            }
             //Valitaan datasta ensimmäisen valinnan mukaan
             data = array.data(ekaValinta);
             for (int i = 0; i < 3; i++)
             {
                 Console.WriteLine((i + 1) + ": " + data[i]);
             }
-            Console.WriteLine("\nvalitse numero 1-3");
-            tokaValinta = Console.ReadLine();
+            while (numero2 > 3 || numero2 < 1)
+            {
+                Console.WriteLine("\nvalitse numero 1-3");
+                tokaValinta = Console.ReadLine();
+                numero2 = Convert.ToInt32(tokaValinta);
+            }
             valinta.FinalPrint(ekaValinta, tokaValinta, data);
         }
         public class Kysely
@@ -271,4 +280,3 @@ namespace TietokantaTesti
         }
     }
 }
-
