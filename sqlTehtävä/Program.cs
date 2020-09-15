@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
 
 namespace TietokantaTesti
@@ -121,7 +117,6 @@ namespace TietokantaTesti
                                         break;
                                     default:
                                         break;
-
                                 }
                                 break;
                             case "2":
@@ -144,7 +139,6 @@ namespace TietokantaTesti
                                         break;
                                     default:
                                         break;
-
                                 }
                                 break;
                             case "3":
@@ -174,7 +168,6 @@ namespace TietokantaTesti
                                         break;
                                     default:
                                         break;
-
                                 }
                                 break;
                             default:
